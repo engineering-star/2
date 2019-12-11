@@ -1,0 +1,46 @@
+import random
+import csv
+attributes = [['Sunny','Rainy'], ['Warm','Cold'], ['Normal','High'],['Strong','Weak'], ['Warm','Cool'], ['Same','Change']]
+num_attributes = len(attributes)
+a = []
+print("\n The Given Training Data Set \n")
+with open('ws.csv', 'r') as csvFile:
+    reader = csv.reader(csvFile)
+    for row in reader:
+        a.append (row)
+        print(row)
+print("\n The initial value of hypothesis: ")
+S = ['0'] * num_attributes
+G = ['?'] * num_attributes
+print ("\n The most specific hypothesis S0 : ",S)
+print (" \n The most general hypothesis G0 : ",G)
+for j in range(0,num_attributes):
+    S[j] = a[0][j]
+print("\n Candidate Elimination algorithm Hypotheses Version Space Computation\n")
+temp=[]
+for i in range(0,len(a)):
+    if a[i][num_attributes] == 'Yes':
+        for j in range(0,num_attributes):
+            if a[i][j] != S[j]:
+                S[j]='?'
+            for k in range(0,len(temp)):
+                for j in range(0,num_attributes):
+                    if temp[k][j] != '?' and temp[k][j] != S[j]:
+                            del temp[k]
+        
+    elif a[i][num_attributes]=='No':
+        for j in range(0,num_attributes):
+            if S[j] != a[i][j] and S[j] != '?':
+                G[j] = S[j]
+                temp.append(G)
+                G = ['?'] * num_attributes
+    print("\n For Training Example No :{0} S{0}:".format(i+1),S)
+    if (len(temp)==0):
+        print("\n For Training Example No :{0} G{0}:".format(i+1),G)
+    else:
+        print("\n For Training Example No :{0} G{0}:".format(i+1),temp)
+
+Sunny,Warm,Normal,Strong,Warm,Same,Yes
+Sunny,Warm,High,Strong,Warm,Same,Yes
+Rainy,Cold,High,Strong,Warm,Change,No
+Sunny,Warm,High,Strong,Cool,Change,Yes
